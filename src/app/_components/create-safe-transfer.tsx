@@ -119,6 +119,17 @@ const CreateSafeTransfer = () => {
               <Copy size={14} />
             </Button>
           </div>
+          <p
+            className="cursor-pointer text-xs text-slate-800/60"
+            onClick={() => {
+              setStep(1);
+              setContent("");
+              setExpiration("1d");
+              setLinkId("");
+            }}
+          >
+            Create another
+          </p>
         </div>
       )}
     </>
