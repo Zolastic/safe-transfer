@@ -1,3 +1,4 @@
+import ViewSafeTransfer from "@/components/view-safe-transfer";
 import { api, HydrateClient } from "@/trpc/server";
 import { Frown, Lock } from "lucide-react";
 import React from "react";
@@ -47,7 +48,12 @@ const LinkPage = async ({ params }: LinkPageProps) => {
             </div>
           )}
 
-        <div className="w-full max-w-md">{/* <CreateSafeTransfer /> */}</div>
+        {doesSafeTransferLinkExists.exists &&
+          !doesSafeTransferLinkExists.isPastExpiry && (
+            <div className="w-full max-w-md">
+              <ViewSafeTransfer id={link} />
+            </div>
+          )}
       </main>
     </HydrateClient>
   );

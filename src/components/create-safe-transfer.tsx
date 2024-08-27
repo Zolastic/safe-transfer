@@ -21,10 +21,10 @@ const CreateSafeTransfer = () => {
   const createSafeTransferMutate =
     api.safeTransfer.createSafeTransferLink.useMutation();
 
-  const [content, setContent] = useState("");
-  const [expiration, setExpiration] = useState("1d");
-  const [linkId, setLinkId] = useState("");
-  const [step, setStep] = useState(1);
+  const [content, setContent] = useState<string>("");
+  const [expiration, setExpiration] = useState<string>("1d");
+  const [linkId, setLinkId] = useState<string>("");
+  const [step, setStep] = useState<number>(1);
 
   const calculateExpirationDate = (expiration: string) => {
     const now = Date.now();
