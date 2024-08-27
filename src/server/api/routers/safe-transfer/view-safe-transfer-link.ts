@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { publicProcedure } from "@/server/api/trpc";
+import Encryption from "@/lib/encryption";
 
 const viewSafeTransferLink = publicProcedure
   .input(z.object({ id: z.string() }))
@@ -17,8 +18,15 @@ const viewSafeTransferLink = publicProcedure
       throw new Error("Safe transfer link not found");
     }
 
+    const encryption = new Encryption();
+    const decryptedContent = encryption.decrypt(safeTransferRecord.content);
+
+    if (!decryptedContent) {
+      throw new Error("Failed to decrypt content");
+    }
+
     return {
-      content: safeTransferRecord.content,
+      content: decryptedContent,
     };
   });
 
