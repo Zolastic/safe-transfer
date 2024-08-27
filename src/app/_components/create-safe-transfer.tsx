@@ -120,7 +120,7 @@ const CreateSafeTransfer = () => {
             </Button>
           </div>
           <p
-            className="cursor-pointer text-xs text-slate-800/60"
+            className="cursor-pointer text-xs text-slate-800/60 hover:underline hover:underline-offset-4"
             onClick={() => {
               setStep(1);
               setContent("");
