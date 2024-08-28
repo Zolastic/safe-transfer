@@ -14,11 +14,14 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { Input } from "@/components/ui/input";
-import { env } from "@/env";
 import { Switch } from "./ui/switch";
 import CopyTextButton from "./copy-text-button";
 
-const CreateSafeTransfer = () => {
+interface CreateSafeTransferProps {
+  wesbiteDomain: string | null;
+}
+
+const CreateSafeTransfer = ({ wesbiteDomain }: CreateSafeTransferProps) => {
   const createSafeTransferMutate =
     api.safeTransfer.createSafeTransferLink.useMutation();
 
@@ -146,12 +149,12 @@ const CreateSafeTransfer = () => {
           <Label>Share Safe Transfer Link</Label>
           <div className="flex w-full gap-2">
             <Input
-              value={`${env.NEXT_PUBLIC_SITE_URL}/${linkId}`}
+              value={`${wesbiteDomain}/${linkId}`}
               onChange={(e) => setLinkId(e.target.value)}
               placeholder="Enter safe transfer link"
               readOnly
             />
-            <CopyTextButton content={`${env.NEXT_PUBLIC_SITE_URL}/${linkId}`} />
+            <CopyTextButton content={`${wesbiteDomain}/${linkId}`} />
           </div>
           <p
             className="cursor-pointer text-xs text-slate-800/60 hover:underline hover:underline-offset-4"
