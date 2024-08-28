@@ -4,7 +4,7 @@ import { publicProcedure } from "@/server/api/trpc";
 import Encryption from "@/lib/encryption";
 import Hash from "@/lib/hash";
 
-const viewSafeTransferLink = publicProcedure
+const viewSafeTransferContent = publicProcedure
   .input(
     z.object({
       id: z.string(),
@@ -59,4 +59,4 @@ const viewSafeTransferLink = publicProcedure
     };
   });
 
-export default viewSafeTransferLink;
+export default viewSafeTransferContent;

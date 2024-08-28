@@ -20,7 +20,7 @@ const ViewSafeTransfer = ({ id, passwordProtected }: ViewSafeTransferProps) => {
   const [password, setPassword] = useState<string>("");
 
   const { data, refetch, isLoading, isError, error } =
-    api.safeTransfer.viewSafeTransferLink.useQuery(
+    api.safeTransfer.viewSafeTransferContent.useQuery(
       { id, password: passwordProtected ? password : "" },
       { enabled: false }, // Disable automatic query execution
     );

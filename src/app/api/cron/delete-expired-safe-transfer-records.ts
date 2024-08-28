@@ -1,3 +1,4 @@
+import { api } from "@/trpc/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -9,5 +10,16 @@ export async function GET(req: NextRequest) {
 
   console.log("Cron Job Ran at: ", new Date());
 
-  return new NextResponse("Cron Ran", { status: 200 });
+  try {
+    await api.safeTransfer.deleteExpiredSafeTransferRecords();
+  } catch (error) {
+    console.error("Error deleting expired safe transfer records: ", error);
+    return new NextResponse("Error deleting expired safe transfer records", {
+      status: 500,
+    });
+  }
+
+  return new NextResponse("Deleted expired safe transfer records", {
+    status: 200,
+  });
 }
