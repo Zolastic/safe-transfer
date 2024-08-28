@@ -49,7 +49,10 @@ const LinkPage = async ({ params }: LinkPageProps) => {
         {doesSafeTransferLinkExists.exists &&
           !doesSafeTransferLinkExists.isPastExpiry && (
             <div className="w-full max-w-md">
-              <ViewSafeTransfer id={link} />
+              <ViewSafeTransfer
+                id={link}
+                passwordProtected={doesSafeTransferLinkExists.passwordProtected}
+              />
             </div>
           )}
       </main>

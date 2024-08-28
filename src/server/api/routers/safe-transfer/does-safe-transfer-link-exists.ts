@@ -16,12 +16,15 @@ const doesSafeTransferLinkExists = publicProcedure
     if (!safeTransferRecord) {
       return {
         exists: false,
+        isPastExpiry: false,
+        passwordProtected: false,
       };
     }
 
     return {
       exists: !!safeTransferRecord,
       isPastExpiry: safeTransferRecord?.expiresAt < new Date(),
+      passwordProtected: safeTransferRecord.passwordProtected,
     };
   });
 

@@ -7,21 +7,30 @@ import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { Copy, LoaderCircle } from "lucide-react";
 import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 type ViewSafeTransferProps = {
   id: string;
+  passwordProtected: boolean;
 };
 
-const ViewSafeTransfer = ({ id }: ViewSafeTransferProps) => {
-  const { data, refetch, isLoading } =
+const ViewSafeTransfer = ({ id, passwordProtected }: ViewSafeTransferProps) => {
+  const [viewSafeTransfer, setViewSafeTransfer] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
+
+  const { data, refetch, isLoading, isError, error } =
     api.safeTransfer.viewSafeTransferLink.useQuery(
-      { id },
+      { id, password: passwordProtected ? password : "" },
       { enabled: false }, // Disable automatic query execution
     );
 
-  const [viewSafeTransfer, setViewSafeTransfer] = useState<boolean>(false);
-
   const fetchSafeTransferContent = async () => {
+    if (passwordProtected && password.trim() === "") {
+      toast.warning("Password is required for password protected link");
+      setViewSafeTransfer(false);
+      return;
+    }
+
     await refetch();
   };
 
@@ -31,25 +40,51 @@ const ViewSafeTransfer = ({ id }: ViewSafeTransferProps) => {
     }
   }, [viewSafeTransfer]);
 
+  useEffect(() => {
+    if (isError) {
+      toast.error(`Failed to load secret${error ? `: ${error.message}` : ""}`);
+      setViewSafeTransfer(false);
+    }
+  }, [isError]);
+
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4">
       {!viewSafeTransfer && (
-        <div className="flex flex-col items-center justify-center gap-3 text-center">
+        <form
+          onSubmit={() => setViewSafeTransfer(true)}
+          className="flex flex-col items-center justify-center gap-3 text-center"
+        >
           <h1 className="text-lg text-slate-800/80">
             Do you want to view the secret shared with you?
           </h1>
-          <p className="text-base text-slate-800/60">
+          {/* <p className="text-base text-slate-800/60">
             After viewing the secret, it will be deleted and you will not be
             able to view it again.
-          </p>
-          <Button onClick={() => setViewSafeTransfer(true)}>View Secret</Button>
-        </div>
+          </p> */}
+          {passwordProtected && (
+            <div className="flex w-full flex-col gap-1 text-center">
+              {/* <Label>Password</Label> */}
+              <p className="text-xs text-slate-800/60">
+                This secret is password protected. You will need to enter the
+                password to view it.
+              </p>
+              <Input
+                type="password"
+                placeholder="Enter password"
+                className="w-full"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          )}
+          <Button type="submit">View Secret</Button>
+        </form>
       )}
 
       {isLoading && (
         <div className="flex flex-col items-center justify-center gap-2">
           <LoaderCircle size={24} className="animate-spin" />
-          <span>Getting secret...</span>
+          <span>Loading secret...</span>
         </div>
       )}
 
