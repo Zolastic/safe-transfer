@@ -1,8 +1,13 @@
 import { HydrateClient } from "@/trpc/server";
 import CreateSafeTransfer from "../components/create-safe-transfer";
 import { Lock } from "lucide-react";
+import { headers } from "next/headers";
 
 export default async function Home() {
+  const headersList = headers();
+
+  const wesbiteDomain = headersList.get("host");
+
   return (
     <HydrateClient>
       <main className="mx-auto flex min-h-screen flex-col items-center justify-start gap-8">
@@ -16,7 +21,7 @@ export default async function Home() {
         </div>
 
         <div className="w-full max-w-md">
-          <CreateSafeTransfer />
+          <CreateSafeTransfer wesbiteDomain={wesbiteDomain} />
         </div>
       </main>
     </HydrateClient>
