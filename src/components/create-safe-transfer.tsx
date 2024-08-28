@@ -15,8 +15,8 @@ import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { Input } from "@/components/ui/input";
 import { env } from "@/env";
-import { Copy } from "lucide-react";
 import { Switch } from "./ui/switch";
+import CopyTextButton from "./copy-text-button";
 
 const CreateSafeTransfer = () => {
   const createSafeTransferMutate =
@@ -151,16 +151,7 @@ const CreateSafeTransfer = () => {
               placeholder="Enter safe transfer link"
               readOnly
             />
-            <Button
-              onClick={async () => {
-                await navigator.clipboard.writeText(
-                  `${env.NEXT_PUBLIC_SITE_URL}/${linkId}`,
-                );
-                toast.success("Link copied!");
-              }}
-            >
-              <Copy size={14} />
-            </Button>
+            <CopyTextButton content={`${env.NEXT_PUBLIC_SITE_URL}/${linkId}`} />
           </div>
           <p
             className="cursor-pointer text-xs text-slate-800/60 hover:underline hover:underline-offset-4"

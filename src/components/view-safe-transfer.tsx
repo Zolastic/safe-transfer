@@ -5,9 +5,10 @@ import { Button } from "./ui/button";
 import { api } from "@/trpc/react";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
-import { Copy, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import CopyTextButton from "./copy-text-button";
 
 type ViewSafeTransferProps = {
   id: string;
@@ -98,14 +99,7 @@ const ViewSafeTransfer = ({ id, passwordProtected }: ViewSafeTransferProps) => {
               readOnly
               rows={5}
             />
-            <Button
-              onClick={async () => {
-                await navigator.clipboard.writeText(`${data.content}`);
-                toast.success("Link copied!");
-              }}
-            >
-              <Copy size={14} />
-            </Button>
+            <CopyTextButton content={data.content} />
           </div>
         </div>
       )}
