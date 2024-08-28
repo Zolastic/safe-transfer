@@ -18,7 +18,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] text-slate-800">
+      <body className="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] px-4 text-slate-800 md:px-0">
         <TRPCReactProvider>
           {children}
           <SiteFooter />
