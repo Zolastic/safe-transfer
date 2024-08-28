@@ -18,7 +18,7 @@ const LinkPage = async ({ params }: LinkPageProps) => {
   return (
     <HydrateClient>
       <main className="mx-auto flex min-h-screen flex-col items-center justify-start gap-8">
-        <div className="flex flex-col items-center justify-center gap-4">
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
           <h1 className="mt-16 flex items-center justify-center gap-2 text-4xl font-bold tracking-tight">
             <span>Safe Transfer</span> <Lock size={36} />
           </h1>
