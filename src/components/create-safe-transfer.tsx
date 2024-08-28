@@ -16,13 +16,19 @@ import { api } from "@/trpc/react";
 import { Input } from "@/components/ui/input";
 import { env } from "@/env";
 import { Copy } from "lucide-react";
+import { Switch } from "./ui/switch";
 
 const CreateSafeTransfer = () => {
   const createSafeTransferMutate =
     api.safeTransfer.createSafeTransferLink.useMutation();
 
-  const [content, setContent] = useState<string>("");
-  const [expiration, setExpiration] = useState<string>("1d");
+  const [formData, setFormData] = useState({
+    content: "",
+    expiration: "1d",
+    passwordProtected: false,
+    password: "",
+  });
+
   const [linkId, setLinkId] = useState<string>("");
   const [step, setStep] = useState<number>(1);
 
@@ -43,10 +49,21 @@ const CreateSafeTransfer = () => {
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (
+      formData.passwordProtected &&
+      !formData.password &&
+      formData.password.trim() === ""
+    ) {
+      toast.warning("Password is required for password protected link");
+      return;
+    }
+
     toast.promise(
       createSafeTransferMutate.mutateAsync({
-        content,
-        expiresAt: calculateExpirationDate(expiration),
+        content: formData.content,
+        expiresAt: calculateExpirationDate(formData.expiration),
+        passwordProtected: formData.passwordProtected,
+        password: formData.password,
       }),
       {
         loading: "Creating safe transfer link...",
@@ -60,29 +77,36 @@ const CreateSafeTransfer = () => {
     );
   };
 
+  const handleChange = (field: string, value: string | boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   return (
     <>
       {step === 1 && (
         <form
           onSubmit={handleOnSubmit}
-          className="flex flex-col items-start justify-center gap-2"
+          className="flex flex-col items-start justify-center gap-3"
         >
-          <div className="w-full">
+          <div className="flex w-full flex-col gap-1">
             <Label>Your Secret</Label>
             <Textarea
               placeholder="Enter your secret"
               className="w-full"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              value={formData.content}
+              onChange={(e) => handleChange("content", e.target.value)}
               rows={5}
               required
             />
           </div>
-          <div className="w-full">
+          <div className="flex w-full flex-col gap-1">
             <Label>Expiration Time</Label>
             <Select
-              defaultValue={expiration}
-              onValueChange={(value) => setExpiration(value)}
+              defaultValue={formData.expiration}
+              onValueChange={(value) => handleChange("expiration", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select expiration time" />
@@ -93,6 +117,26 @@ const CreateSafeTransfer = () => {
                 <SelectItem value="1w">1 week</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="flex w-full flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <Label>Password</Label>
+              <Switch
+                checked={formData.passwordProtected}
+                onCheckedChange={(checked) =>
+                  handleChange("passwordProtected", checked)
+                }
+              />
+            </div>
+            {formData.passwordProtected && (
+              <Input
+                value={formData.password}
+                onChange={(e) => handleChange("password", e.target.value)}
+                placeholder="Enter password"
+                type="password"
+                required
+              />
+            )}
           </div>
           <Button type="submit">Generate Link</Button>
         </form>
@@ -107,7 +151,6 @@ const CreateSafeTransfer = () => {
               placeholder="Enter safe transfer link"
               readOnly
             />
-            {/* copy button */}
             <Button
               onClick={async () => {
                 await navigator.clipboard.writeText(
@@ -123,8 +166,12 @@ const CreateSafeTransfer = () => {
             className="cursor-pointer text-xs text-slate-800/60 hover:underline hover:underline-offset-4"
             onClick={() => {
               setStep(1);
-              setContent("");
-              setExpiration("1d");
+              setFormData({
+                content: "",
+                expiration: "1d",
+                passwordProtected: false,
+                password: "",
+              });
               setLinkId("");
             }}
           >

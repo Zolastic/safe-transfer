@@ -11,10 +11,12 @@ datasource db {
 }
 
 model SafeTransfer {
-    id        String    @id @default(cuid())
-    content   String
-    expiresAt DateTime
-    viewed    Boolean   @default(false)
-    viewdAt   DateTime?
-    createdAt DateTime  @default(now())
+    id                String    @id @default(cuid())
+    content           String
+    expiresAt         DateTime
+    passwordProtected Boolean   @default(false)
+    password          String?
+    viewed            Boolean   @default(false)
+    viewdAt           DateTime?
+    createdAt         DateTime  @default(now())
 }

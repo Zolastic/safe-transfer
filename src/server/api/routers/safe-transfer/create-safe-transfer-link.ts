@@ -1,12 +1,22 @@
 import { z } from "zod";
-
 import { publicProcedure } from "@/server/api/trpc";
 import Encryption from "@/lib/encryption";
+import Hash from "@/lib/hash";
 
 const createSafeTransferLink = publicProcedure
-  .input(z.object({ content: z.string().min(1), expiresAt: z.date() }))
+  .input(
+    z.object({
+      content: z.string().min(1),
+      expiresAt: z.date(),
+      passwordProtected: z.boolean(),
+      password: z
+        .union([z.string().length(0), z.string().min(1)])
+        .optional()
+        .transform((e) => (e === "" ? undefined : e)),
+    }),
+  )
   .mutation(async ({ input, ctx }) => {
-    const { content, expiresAt } = input;
+    const { content, expiresAt, passwordProtected, password } = input;
 
     const encryption = new Encryption();
     const encryptedContent = encryption.encrypt(content);
@@ -15,10 +25,22 @@ const createSafeTransferLink = publicProcedure
       throw new Error("Failed to encrypt content");
     }
 
+    let hashedPassword: string | null = null;
+
+    if (passwordProtected && password) {
+      const hash = new Hash();
+      hashedPassword = await hash.hash(password);
+      if (!hashedPassword) {
+        throw new Error("Failed to hash password");
+      }
+    }
+
     const createdSafeTransferRecord = await ctx.db.safeTransfer.create({
       data: {
         content: encryptedContent,
         expiresAt,
+        passwordProtected,
+        password: hashedPassword,
       },
     });
 
@@ -26,4 +48,5 @@ const createSafeTransferLink = publicProcedure
       id: createdSafeTransferRecord.id,
     };
   });
+
 export default createSafeTransferLink;

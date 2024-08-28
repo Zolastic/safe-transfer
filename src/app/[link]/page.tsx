@@ -15,8 +15,6 @@ const LinkPage = async ({ params }: LinkPageProps) => {
   const doesSafeTransferLinkExists =
     await api.safeTransfer.doesSafeTransferLinkExists({ id: link });
 
-  console.log(doesSafeTransferLinkExists);
-
   return (
     <HydrateClient>
       <main className="mx-auto flex min-h-screen flex-col items-center justify-start gap-8">

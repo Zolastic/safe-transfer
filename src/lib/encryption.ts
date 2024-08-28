@@ -28,8 +28,6 @@ export default class Encryption {
   key: Buffer = ensureKeyLength(env.CRYPTO_KEY); // env.CRYPTO_KEY should be a 32 BYTE key
 
   encrypt(plaintext: string) {
-    console.log("Encrypting: ", plaintext, this.key);
-
     try {
       const iv = crypto.randomBytes(12);
       const assocData = crypto.randomBytes(16);
