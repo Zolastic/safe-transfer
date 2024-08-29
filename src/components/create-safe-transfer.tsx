@@ -21,15 +21,24 @@ interface CreateSafeTransferProps {
   wesbiteDomain: string | null;
 }
 
+interface CreateSafeTransfer {
+  content: string;
+  expiration: string;
+  passwordProtected: boolean;
+  password: string;
+  oneTimeView: boolean;
+}
+
 const CreateSafeTransfer = ({ wesbiteDomain }: CreateSafeTransferProps) => {
   const createSafeTransferMutate =
     api.safeTransfer.createSafeTransferLink.useMutation();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateSafeTransfer>({
     content: "",
     expiration: "1d",
     passwordProtected: false,
     password: "",
+    oneTimeView: false,
   });
 
   const [linkId, setLinkId] = useState<string>("");
@@ -67,6 +76,7 @@ const CreateSafeTransfer = ({ wesbiteDomain }: CreateSafeTransferProps) => {
         expiresAt: calculateExpirationDate(formData.expiration),
         passwordProtected: formData.passwordProtected,
         password: formData.password,
+        oneTimeView: formData.oneTimeView,
       }),
       {
         loading: "Creating safe transfer link...",
@@ -122,7 +132,7 @@ const CreateSafeTransfer = ({ wesbiteDomain }: CreateSafeTransferProps) => {
             </Select>
           </div>
           <div className="flex w-full flex-col gap-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between gap-2">
               <Label>Password</Label>
               <Switch
                 checked={formData.passwordProtected}
@@ -140,6 +150,20 @@ const CreateSafeTransfer = ({ wesbiteDomain }: CreateSafeTransferProps) => {
                 required
               />
             )}
+          </div>
+          <div className="flex w-full flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <Label>On time view</Label>
+              <Switch
+                checked={formData.oneTimeView}
+                onCheckedChange={(checked) =>
+                  handleChange("oneTimeView", checked)
+                }
+              />
+            </div>
+            <p className="text-xs text-slate-800/60">
+              The link will be destroyed after the first view.
+            </p>
           </div>
           <Button type="submit">Generate Link</Button>
         </form>
@@ -165,6 +189,7 @@ const CreateSafeTransfer = ({ wesbiteDomain }: CreateSafeTransferProps) => {
                 expiration: "1d",
                 passwordProtected: false,
                 password: "",
+                oneTimeView: false,
               });
               setLinkId("");
             }}

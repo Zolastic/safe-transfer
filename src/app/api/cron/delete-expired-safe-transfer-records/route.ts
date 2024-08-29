@@ -2,13 +2,15 @@ import { api } from "@/trpc/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  console.log("Cron Job Ran at 1: ", new Date());
+
   if (
-    req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+    req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`
   ) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  console.log("Cron Job Ran at: ", new Date());
+  console.log("Cron Job Ran at 2: ", new Date());
 
   try {
     await api.safeTransfer.deleteExpiredSafeTransferRecords();

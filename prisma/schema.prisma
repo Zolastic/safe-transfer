@@ -16,6 +16,7 @@ model SafeTransfer {
     expiresAt         DateTime
     passwordProtected Boolean   @default(false)
     password          String?
+    oneTimeView       Boolean   @default(false)
     viewed            Boolean   @default(false)
     viewdAt           DateTime?
     createdAt         DateTime  @default(now())
