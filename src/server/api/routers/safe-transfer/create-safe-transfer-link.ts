@@ -13,10 +13,12 @@ const createSafeTransferLink = publicProcedure
         .union([z.string().length(0), z.string().min(1)])
         .optional()
         .transform((e) => (e === "" ? undefined : e)),
+      oneTimeView: z.boolean(),
     }),
   )
   .mutation(async ({ input, ctx }) => {
-    const { content, expiresAt, passwordProtected, password } = input;
+    const { content, expiresAt, passwordProtected, password, oneTimeView } =
+      input;
 
     const encryption = new Encryption();
     const encryptedContent = encryption.encrypt(content);
@@ -41,6 +43,7 @@ const createSafeTransferLink = publicProcedure
         expiresAt,
         passwordProtected,
         password: hashedPassword,
+        oneTimeView,
       },
     });
 
