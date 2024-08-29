@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/delete-expired-safe-transfer-records",
-      "schedule": "45 2 * * *"
+      "schedule": "15 3 * * *"
     }
   ]
 }
