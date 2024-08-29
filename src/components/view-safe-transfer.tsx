@@ -13,9 +13,14 @@ import CopyTextButton from "./copy-text-button";
 type ViewSafeTransferProps = {
   id: string;
   passwordProtected: boolean;
+  oneTimeView: boolean;
 };
 
-const ViewSafeTransfer = ({ id, passwordProtected }: ViewSafeTransferProps) => {
+const ViewSafeTransfer = ({
+  id,
+  passwordProtected,
+  oneTimeView,
+}: ViewSafeTransferProps) => {
   const [viewSafeTransfer, setViewSafeTransfer] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
 
@@ -58,10 +63,12 @@ const ViewSafeTransfer = ({ id, passwordProtected }: ViewSafeTransferProps) => {
           <h1 className="text-lg text-slate-800/80">
             Do you want to view the secret shared with you?
           </h1>
-          {/* <p className="text-base text-slate-800/60">
-            After viewing the secret, it will be deleted and you will not be
-            able to view it again.
-          </p> */}
+          {oneTimeView && (
+            <p className="text-xs text-slate-800/60">
+              This secret can only be viewed once. After viewing, it will be
+              deleted and you will not be able to view it again.
+            </p>
+          )}
           {passwordProtected && (
             <div className="flex w-full flex-col gap-1 text-center">
               {/* <Label>Password</Label> */}

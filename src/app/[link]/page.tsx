@@ -27,14 +27,16 @@ const LinkPage = async ({ params }: LinkPageProps) => {
           </p>
         </div>
 
-        {!doesSafeTransferLinkExists.exists && (
-          <div className="flex flex-col items-center justify-center gap-1 text-lg text-slate-800/60">
-            <h1 className="flex items-center justify-center gap-1">
-              Uh oh! <Frown size={18} />
-            </h1>
-            <p>This link does not exist or has expired.</p>
-          </div>
-        )}
+        {!doesSafeTransferLinkExists.exists ||
+          (doesSafeTransferLinkExists.oneTimeView &&
+            doesSafeTransferLinkExists.isViewed && (
+              <div className="flex flex-col items-center justify-center gap-1 text-lg text-slate-800/60">
+                <h1 className="flex items-center justify-center gap-1">
+                  Uh oh! <Frown size={18} />
+                </h1>
+                <p>This link does not exist or has expired.</p>
+              </div>
+            ))}
 
         {doesSafeTransferLinkExists.exists &&
           doesSafeTransferLinkExists.isPastExpiry && (
@@ -47,11 +49,14 @@ const LinkPage = async ({ params }: LinkPageProps) => {
           )}
 
         {doesSafeTransferLinkExists.exists &&
-          !doesSafeTransferLinkExists.isPastExpiry && (
+          !doesSafeTransferLinkExists.isPastExpiry &&
+          doesSafeTransferLinkExists.oneTimeView &&
+          !doesSafeTransferLinkExists.isViewed && (
             <div className="w-full max-w-md">
               <ViewSafeTransfer
                 id={link}
                 passwordProtected={doesSafeTransferLinkExists.passwordProtected}
+                oneTimeView={doesSafeTransferLinkExists.oneTimeView}
               />
             </div>
           )}

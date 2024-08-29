@@ -161,9 +161,7 @@ const CreateSafeTransfer = ({ wesbiteDomain }: CreateSafeTransferProps) => {
                 }
               />
             </div>
-            <p
-              className={`text-xs ${formData.oneTimeView ? "text-red-400" : "text-slate-800/60"}`}
-            >
+            <p className="text-xs text-slate-800/60">
               The link will be destroyed after the first view.
             </p>
           </div>

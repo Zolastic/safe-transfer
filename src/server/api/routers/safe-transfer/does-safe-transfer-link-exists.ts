@@ -18,13 +18,17 @@ const doesSafeTransferLinkExists = publicProcedure
         exists: false,
         isPastExpiry: false,
         passwordProtected: false,
+        oneTimeView: false,
+        isViewed: false,
       };
     }
 
     return {
       exists: !!safeTransferRecord,
-      isPastExpiry: safeTransferRecord?.expiresAt < new Date(),
+      isPastExpiry: safeTransferRecord.expiresAt < new Date(),
       passwordProtected: safeTransferRecord.passwordProtected,
+      oneTimeView: safeTransferRecord.oneTimeView,
+      isViewed: safeTransferRecord.viewed,
     };
   });
 
