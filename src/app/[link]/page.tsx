@@ -12,8 +12,35 @@ type LinkPageProps = {
 const LinkPage = async ({ params }: LinkPageProps) => {
   const { link } = params;
 
-  const doesSafeTransferLinkExists =
+  const { exists, oneTimeView, isViewed, isPastExpiry, passwordProtected } =
     await api.safeTransfer.doesSafeTransferLinkExists({ id: link });
+
+  const isLinkInvalid = !exists || (oneTimeView && isViewed) || isPastExpiry;
+
+  const renderContent = (): React.JSX.Element => {
+    if (isLinkInvalid) {
+      return renderErrorMessage("This link does not exist or has expired.");
+    }
+
+    return (
+      <div className="w-full max-w-md">
+        <ViewSafeTransfer
+          id={link}
+          passwordProtected={passwordProtected}
+          oneTimeView={oneTimeView}
+        />
+      </div>
+    );
+  };
+
+  const renderErrorMessage = (message: string) => (
+    <div className="flex flex-col items-center justify-center gap-1 text-lg text-slate-800/60">
+      <h1 className="flex items-center justify-center gap-1">
+        Uh oh! <Frown size={18} />
+      </h1>
+      <p>{message}</p>
+    </div>
+  );
 
   return (
     <HydrateClient>
@@ -26,40 +53,7 @@ const LinkPage = async ({ params }: LinkPageProps) => {
             Access the secret shared with you securely.
           </p>
         </div>
-
-        {!doesSafeTransferLinkExists.exists ||
-          (doesSafeTransferLinkExists.oneTimeView &&
-            doesSafeTransferLinkExists.isViewed && (
-              <div className="flex flex-col items-center justify-center gap-1 text-lg text-slate-800/60">
-                <h1 className="flex items-center justify-center gap-1">
-                  Uh oh! <Frown size={18} />
-                </h1>
-                <p>This link does not exist or has expired.</p>
-              </div>
-            ))}
-
-        {doesSafeTransferLinkExists.exists &&
-          doesSafeTransferLinkExists.isPastExpiry && (
-            <div className="flex flex-col items-center justify-center gap-1 text-lg text-slate-800/60">
-              <h1 className="flex items-center justify-center gap-1">
-                Uh oh! <Frown size={18} />
-              </h1>
-              <p>This link has expired.</p>
-            </div>
-          )}
-
-        {doesSafeTransferLinkExists.exists &&
-          !doesSafeTransferLinkExists.isPastExpiry &&
-          doesSafeTransferLinkExists.oneTimeView &&
-          !doesSafeTransferLinkExists.isViewed && (
-            <div className="w-full max-w-md">
-              <ViewSafeTransfer
-                id={link}
-                passwordProtected={doesSafeTransferLinkExists.passwordProtected}
-                oneTimeView={doesSafeTransferLinkExists.oneTimeView}
-              />
-            </div>
-          )}
+        {renderContent()}
       </main>
     </HydrateClient>
   );
