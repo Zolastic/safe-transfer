@@ -9,6 +9,7 @@ import { LoaderCircle } from "lucide-react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import CopyTextButton from "./copy-text-button";
+import Link from "next/link";
 
 type ViewSafeTransferProps = {
   id: string;
@@ -97,17 +98,25 @@ const ViewSafeTransfer = ({
       )}
 
       {viewSafeTransfer && data && (
-        <div className="flex w-full flex-col items-start justify-center gap-2">
-          <Label>Secret Content</Label>
-          <div className="flex w-full items-end gap-2">
-            <Textarea
-              value={data.content}
-              className="w-full"
-              readOnly
-              rows={5}
-            />
-            <CopyTextButton content={data.content} />
+        <div className="flex w-full flex-col items-start justify-center gap-4">
+          <div className="flex w-full flex-col items-start justify-center gap-2">
+            <Label>Secret Content</Label>
+            <div className="flex w-full items-end gap-2">
+              <Textarea
+                value={data.content}
+                className="w-full"
+                readOnly
+                rows={5}
+              />
+              <CopyTextButton content={data.content} />
+            </div>
           </div>
+          <Link
+            href="/"
+            className="cursor-pointer text-xs text-slate-800/60 hover:underline hover:underline-offset-4"
+          >
+            Create a new safe transfer
+          </Link>
         </div>
       )}
     </div>
