@@ -98,7 +98,7 @@ const ViewSafeTransfer = ({
       )}
 
       {viewSafeTransfer && data && (
-        <div className="flex w-full flex-col items-start justify-center gap-4">
+        <div className="flex w-full flex-col items-start justify-center gap-2">
           <div className="flex w-full flex-col items-start justify-center gap-2">
             <Label>Secret Content</Label>
             <div className="flex w-full items-end gap-2">
